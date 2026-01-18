@@ -25,7 +25,7 @@ class BrainrotRecipe(RecipeBase):
     
     def generate_layout(self) -> LayoutConfig:
         return LayoutConfig(
-            style="split-screen",
+            style="fullscreen",
             transition_type="cut",
             transition_duration=0.1  # Very fast cuts
         )
@@ -58,8 +58,45 @@ class BrainrotRecipe(RecipeBase):
         )
     
     def get_keywords(self, topic: str) -> List[str]:
-        """Generate intense, energetic keywords."""
-        base_keywords = super().get_keywords(topic)
-        # Add intensity modifiers
-        intensity_words = ["intense", "fast", "chaotic", "energetic", "dynamic"]
-        return base_keywords + intensity_words
+        """Generate stock-footage-friendly keywords from topic."""
+        # Map common topics to better stock footage search terms
+        keyword_mappings = {
+            "messi": ["soccer", "football", "athlete", "sports"],
+            "ronaldo": ["soccer", "football", "athlete", "sports"],
+            "football": ["soccer", "sports", "stadium", "athlete"],
+            "soccer": ["football", "sports", "stadium", "goal"],
+            "basketball": ["sports", "athlete", "basketball court", "slam dunk"],
+            "gaming": ["gaming", "esports", "computer", "neon lights"],
+            "backflip": ["gymnastics", "acrobatics", "parkour", "extreme sports"],
+            "backflips": ["gymnastics", "acrobatics", "parkour", "extreme sports"],
+            "car": ["car", "racing", "sports car", "speed"],
+            "money": ["money", "cash", "success", "business"],
+            "gym": ["gym", "fitness", "workout", "muscles"],
+            "workout": ["fitness", "gym", "exercise", "training"],
+        }
+        
+        # Extract base keywords from topic
+        topic_lower = topic.lower()
+        keywords = []
+        
+        # Check for mapped keywords
+        for key, mapped_words in keyword_mappings.items():
+            if key in topic_lower:
+                keywords.extend(mapped_words)
+        
+        # If no mappings found, use the topic words directly
+        if not keywords:
+            keywords = [word.strip() for word in topic_lower.split() if len(word.strip()) > 2]
+        
+        # Add some generic energetic/brainrot style keywords
+        style_keywords = ["action", "dynamic", "energy"]
+        
+        # Return unique keywords, prioritizing mapped ones
+        seen = set()
+        result = []
+        for kw in keywords + style_keywords:
+            if kw not in seen:
+                seen.add(kw)
+                result.append(kw)
+        
+        return result[:8]  # Limit to 8 keywords

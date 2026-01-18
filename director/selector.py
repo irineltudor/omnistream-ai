@@ -18,7 +18,7 @@ class DirectorSelector:
             api_key: Gemini API key (uses Config if None)
         """
         self.api_key = api_key or Config.GEMINI_API_KEY
-        self.model_name = "gemini-2.0-flash-exp"  # Using latest flash model
+        self.model_name = "gemini-1.5-flash"  # More stable model with better quota
         self.model = None
         
         if self.api_key:
